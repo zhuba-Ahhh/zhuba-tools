@@ -1,0 +1,41 @@
+{
+  "name": "zhuba-tools",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "dist/zhuba-tools.umd.js",
+  "module": "dist/zhuba-tools.es.js",
+  "files": [
+    "dist/*"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhuba-Ahhh/zhuba-tools.git"
+  },
+  "keywords": [
+    "typescript"
+  ],
+  "author": "youthcity",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhuba-Ahhh/zhuba-tools/issues"
+  },
+  "homepage": "https://github.com/zhuba-Ahhh/zhuba-tools#readme",
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest",
+    "coverage": "vitest --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.0.2",
+    "jsdom": "^23.0.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vite-plugin-dts": "^3.6.4",
+    "vitest": "^1.0.4"
+  }
+}
