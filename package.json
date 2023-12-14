@@ -1,41 +1,42 @@
 {
   "name": "zhuba-tools",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "types": "dist/index.d.ts",
-  "main": "dist/zhuba-tools.umd.js",
-  "module": "dist/zhuba-tools.es.js",
-  "files": [
-    "dist/*"
+  "keywords": [
+    "typescript"
   ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
+  "homepage": "https://github.com/zhuba-Ahhh/zhuba-tools#readme",
+  "bugs": {
+    "url": "https://github.com/zhuba-Ahhh/zhuba-tools/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zhuba-Ahhh/zhuba-tools.git"
   },
-  "keywords": [
-    "typescript"
-  ],
-  "author": "youthcity",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/zhuba-Ahhh/zhuba-tools/issues"
-  },
-  "homepage": "https://github.com/zhuba-Ahhh/zhuba-tools#readme",
+  "author": "youthcity",
+  "type": "module",
+  "main": "dist/zhuba-tools.umd.js",
+  "module": "dist/zhuba-tools.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
-    "build": "vite build",
-    "test": "vitest",
-    "coverage": "vitest --coverage"
+    "build": "rm -rf dist & vite build",
+    "coverage": "vitest --coverage",
+    "test": "vitest"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^1.0.2",
     "jsdom": "^23.0.1",
+    "prefer-code-style": "^1.5.10",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
+    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-dts": "^3.6.4",
     "vitest": "^1.0.4"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }
