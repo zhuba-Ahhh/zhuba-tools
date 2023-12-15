@@ -1,9 +1,9 @@
-interface FullscreenElement {
+type FullscreenElement = HTMLElement & {
     requestFullscreen: (options?: FullscreenOptions) => Promise<void>;
     mozRequestFullScreen: () => Promise<void>;
     msRequestFullscreen: () => Promise<void>;
     webkitRequestFullScreen: () => Promise<void>;
-}
+};
 /**
  * @description 全屏
  * @param element 全屏元素
