@@ -13,7 +13,7 @@
     "url": "git+https://github.com/zhuba-Ahhh/zhuba-tools.git"
   },
   "license": "MIT",
-  "author": "youthcity",
+  "author": "zhuba-Ahhh",
   "type": "module",
   "main": "dist/zhuba-tools.umd.js",
   "module": "dist/zhuba-tools.es.js",
