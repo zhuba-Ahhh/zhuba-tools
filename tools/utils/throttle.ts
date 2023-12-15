@@ -1,6 +1,6 @@
 export const throttle = (callback: () => void, wait = 1000, immediate = false) => {
   let last = 0;
-  let timer: number | null | undefined = null;
+  let timer: ReturnType<typeof setTimeout> | null = null;
 
   return (...args: []) => {
     const now = +new Date();

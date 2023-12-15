@@ -1,11 +1,11 @@
-export const debounce = (callback: () => void, wait = 1000, immediate = false) => {
-  let timer: number | null | undefined = null;
+export const debounce = (callback: (...args: any[]) => void, wait = 1000, immediate = false) => {
+  let timer: ReturnType<typeof setTimeout> | null = null;
 
   return (...args: []) => {
     const later = () => {
       timer = null;
       if (!immediate) {
-        callback.apply(this, args);
+        callback(...args);
       }
     };
 
@@ -16,7 +16,7 @@ export const debounce = (callback: () => void, wait = 1000, immediate = false) =
     timer = setTimeout(later, wait);
 
     if (callNow) {
-      callback.apply(this, args);
+      callback(...args);
     }
   };
 };
