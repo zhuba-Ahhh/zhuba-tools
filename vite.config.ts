@@ -19,6 +19,13 @@ export default defineConfig({
       entry: 'tools/index.ts', // 工具库入口
       name: 'zhuba-tools', // 工具库名称
       fileName: (format) => `zhuba-tools.${format}.js` // 工具库名称
+    },
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: false
+      }
     }
   }
 });
