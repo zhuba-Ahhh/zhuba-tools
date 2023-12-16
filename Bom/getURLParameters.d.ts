@@ -3,4 +3,4 @@
  * @param url string
  * @returns
  */
-export declare const getURLParameters: (url: string) => Record<string, any> | undefined;
+export declare const getURLParameters: (url: string) => Record<string, string>;
