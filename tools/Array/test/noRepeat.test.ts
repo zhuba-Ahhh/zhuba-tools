@@ -1,4 +1,3 @@
-// noRepeat.test.ts
 import { describe, expect, it } from 'vitest';
 
 import { noRepeat } from '..';
