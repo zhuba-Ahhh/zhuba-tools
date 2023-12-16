@@ -3,13 +3,13 @@
  * @param url string
  * @returns
  */
-export const getURLParameters = (url: string): Record<string, any> | undefined => {
-  return url
-    .match(/([^?=&]+)(=([^&]*))/g)
-    ?.reduce(
-      (a: Record<string, any>, v: string) => (
-        (a[v.slice(0, v.indexOf('='))] = v.slice(v.indexOf('=') + 1)), a
-      ),
-      {}
-    );
+export const getURLParameters = (url: string): Record<string, string> => {
+  return (url.match(/([^?=&]+)(=([^&]*))/g) ?? []).reduce(
+    (params: Record<string, string>, param: string) => {
+      const [key, value] = param.split('=');
+      params[key] = decodeURIComponent(value);
+      return params;
+    },
+    {}
+  );
 };

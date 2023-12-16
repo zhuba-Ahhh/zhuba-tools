@@ -11,25 +11,25 @@ type FullscreenElement = HTMLElement & {
  * @param element 全屏元素
  */
 export const launchFullscreen = (element: FullscreenElement) => {
-  if (element.requestFullscreen) {
+  if (element?.requestFullscreen) {
     element.requestFullscreen();
-  } else if (element.mozRequestFullScreen) {
+  } else if (element?.mozRequestFullScreen) {
     element.mozRequestFullScreen();
-  } else if (element.msRequestFullscreen) {
+  } else if (element?.msRequestFullscreen) {
     element.msRequestFullscreen();
-  } else if (element.webkitRequestFullScreen) {
+  } else if (element?.webkitRequestFullScreen) {
     element.webkitRequestFullScreen();
   }
 };
 
-launchFullscreen(document.documentElement as FullscreenElement);
-launchFullscreen(document.getElementById('id') as FullscreenElement); //某个元素进入全屏
+// launchFullscreen(document.documentElement as FullscreenElement);
+// launchFullscreen(document.getElementById('id') as FullscreenElement); //某个元素进入全屏
 
 /**
  * @description 退出全屏
  */
 export const exitFullscreen = () => {
-  if (document.exitFullscreen) {
+  if (document?.exitFullscreen) {
     document.exitFullscreen();
   }
   // else if (document?.msExitFullscreen) {

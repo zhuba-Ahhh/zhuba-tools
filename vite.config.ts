@@ -26,6 +26,17 @@ export default defineConfig({
         drop_console: true,
         drop_debugger: false
       }
+    },
+    rollupOptions: {
+      // 将 React 和 React-DOM 标记为外部依赖
+      external: ['react', 'react-dom'],
+      output: {
+        // 为 React 和 React-DOM 提供全局变量
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM'
+        }
+      }
     }
   }
 });
