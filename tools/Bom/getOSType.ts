@@ -9,7 +9,6 @@ export enum OSType {
  * @description 获取操作系统类型
  * @returns 1: ios  2: android 3: 其它
  */
-
 export const getOSType = (): OSType => {
   const userAgent = navigator.userAgent;
   const isAndroid = userAgent.includes('Android') || userAgent.includes('Linux');

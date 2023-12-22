@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-describe('preventScroll tests', () => {
+describe('createScrollControl tests', () => {
   it('should pass', () => {
     expect(true).toBeTruthy();
   });
