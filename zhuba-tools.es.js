@@ -57,6 +57,38 @@ const turnCase = (str, type = 1) => {
       return str;
   }
 };
+const createScrollControl = () => {
+  let scrollTop = 0;
+  let originalStyle = null;
+  const setBodyStyle = (style) => {
+    const bodyStyle = document.body.style;
+    Object.assign(bodyStyle, style);
+  };
+  const preventScroll = () => {
+    scrollTop = window.scrollY;
+    originalStyle = document.body.style.cssText ? { ...document.body.style } : null;
+    setBodyStyle({
+      overflowY: "hidden",
+      position: "fixed",
+      width: "100%",
+      top: -scrollTop + "px"
+    });
+  };
+  const recoverScroll = () => {
+    if (originalStyle !== null) {
+      setBodyStyle(originalStyle);
+    } else {
+      setBodyStyle({
+        overflowY: "",
+        position: "",
+        width: "",
+        top: ""
+      });
+    }
+    window.scrollTo(0, scrollTop);
+  };
+  return { preventScroll, recoverScroll };
+};
 const getBatteryStatus = async () => {
   if (!navigator.getBattery) {
     throw new Error("Battery status is not supported by this browser.");
@@ -69,11 +101,6 @@ const getBatteryStatus = async () => {
     level: battery.level
   };
 };
-getBatteryStatus().then((status) => {
-  console.log(status);
-}).catch((error) => {
-  console.error(error);
-});
 const getCurrentPosition = () => {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -146,21 +173,6 @@ const parseUrl = (url) => {
     obj[key] = /^\d+(\.\d+)?$/.test(value) ? parseFloat(value) : decodeURIComponent(value);
   });
   return obj;
-};
-let scrollTop = 0;
-const preventScroll = () => {
-  scrollTop = window.scrollY;
-  const bodyStyle = document.body.style;
-  bodyStyle.overflowY = "hidden";
-  bodyStyle.position = "fixed";
-  bodyStyle.width = "100%";
-  bodyStyle.top = -scrollTop + "px";
-};
-const recoverScroll = () => {
-  const bodyStyle = document.body.style;
-  bodyStyle.overflowY = "auto";
-  bodyStyle.position = "static";
-  window.scrollTo(0, scrollTop);
 };
 const scrollTo = (target = 0, speed = 8) => {
   const targetPosition = target === -1 ? document.documentElement.scrollHeight - window.innerHeight : target;
@@ -488,6 +500,7 @@ export {
   bottomVisible,
   commafy,
   convertToCamelCase,
+  createScrollControl,
   debounce,
   downloadFile,
   emailCheck,
@@ -497,6 +510,7 @@ export {
   format,
   formatToFixed,
   fuzzyQuery,
+  getBatteryStatus,
   getCurrentPosition,
   getOSType,
   getRandomColor,
@@ -510,9 +524,7 @@ export {
   moneyFormat,
   noRepeat,
   parseUrl,
-  preventScroll,
   quickSort,
-  recoverScroll,
   scrollTo,
   smoothScroll,
   throttle,

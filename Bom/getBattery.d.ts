@@ -4,4 +4,5 @@ interface BatteryStatus {
     dischargingTime: number;
     level: number;
 }
-declare const getBatteryStatus: () => Promise<BatteryStatus>;
+export declare const getBatteryStatus: () => Promise<BatteryStatus>;
+export {};
