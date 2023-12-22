@@ -43,12 +43,3 @@ export const getCurrentPosition = (): Promise<Position> => {
     );
   });
 };
-
-// // 使用示例
-// getCurrentPosition()
-//   .then((position) => {
-//     console.log(position);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });

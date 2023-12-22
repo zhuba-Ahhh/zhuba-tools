@@ -7,7 +7,7 @@ interface BatteryStatus {
   level: number;
 }
 
-const getBatteryStatus = async (): Promise<BatteryStatus> => {
+export const getBatteryStatus = async (): Promise<BatteryStatus> => {
   if (!navigator.getBattery) {
     throw new Error('Battery status is not supported by this browser.');
   }
@@ -20,12 +20,3 @@ const getBatteryStatus = async (): Promise<BatteryStatus> => {
     level: battery.level
   };
 };
-
-// 使用示例
-getBatteryStatus()
-  .then((status) => {
-    console.log(status);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
