@@ -1,4 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
+const foreachTree = (data, callback, childrenName = "children", depth = 0, parent) => {
+  for (const item of data) {
+    callback(item, depth, parent);
+    if (item[childrenName] && Array.isArray(item[childrenName])) {
+      foreachTree(item[childrenName], callback, childrenName, depth + 1, item);
+    }
+  }
+};
 const fuzzyQuery = (list, keyWords, attributes = "name") => {
   const regexes = Array.isArray(keyWords) ? keyWords.map((kw) => new RegExp(kw)) : [new RegExp(keyWords)];
   const attrs = Array.isArray(attributes) ? attributes : [attributes];
@@ -20,14 +28,6 @@ const noRepeat = (arr) => {
     return [];
   }
   return [...new Set(arr)];
-};
-const foreachTree = (data, callback, childrenName = "children", depth = 0, parent) => {
-  for (const item of data) {
-    callback(item, depth, parent);
-    if (item[childrenName] && Array.isArray(item[childrenName])) {
-      foreachTree(item[childrenName], callback, childrenName, depth + 1, item);
-    }
-  }
 };
 const turnCase = (str, type = 1) => {
   if (typeof str !== "string") {
@@ -254,6 +254,74 @@ const downloadFile = async (api, params, fileName, type = "get") => {
     console.error(`Error while downloading file: ${err}`);
   }
 };
+const findLcs = (str1, str2) => {
+  const m = str1.length;
+  const n = str2.length;
+  const dp = Array.from(
+    { length: m + 1 },
+    () => new Array(n + 1).fill(0)
+  );
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (str1[i - 1] === str2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+  let lcs = "";
+  for (let i = m, j = n; i > 0 && j > 0; ) {
+    if (str1[i - 1] === str2[j - 1]) {
+      lcs = str1[i - 1] + lcs;
+      i--;
+      j--;
+    } else if (dp[i - 1][j] > dp[i][j - 1]) {
+      i--;
+    } else {
+      j--;
+    }
+  }
+  return lcs;
+};
+const highlight = (lcs, subStr) => {
+  const subArr = [...subStr];
+  const indexArr = [...lcs].map((ch) => {
+    const index = subArr.findIndex((item) => item === ch);
+    subArr[index] = uuid();
+    return index;
+  }).sort((a, b) => a - b);
+  const diff = [];
+  for (let i = 0; i < indexArr.length; i++) {
+    const start = indexArr[i];
+    diff.push(subStr.charAt(start));
+    if (i < indexArr.length - 1) {
+      const end = indexArr[i + 1];
+      if (end - start > 1) {
+        diff.push(`<span style="color: #F33131" >${subStr.slice(start + 1, end)}</span>`);
+      }
+    } else {
+      if (start !== subStr.length - 1) {
+        diff.push(`<span style="color: #F33131" >${subStr.slice(start + 1)}</span>`);
+      }
+    }
+  }
+  return diff.join("");
+};
+const highlight1 = (lcs, subStr) => {
+  const lcsChars = [...lcs];
+  let currentIndex = 0;
+  let result = "";
+  for (const char of subStr) {
+    if (lcsChars[currentIndex] === char) {
+      result += char;
+      currentIndex++;
+    } else {
+      result += `<span style="color: #F33131">${char}</span>`;
+    }
+  }
+  return result;
+};
 const formatToFixed = (money, decimals = 2) => {
   return (Math.round((parseFloat(money) + Number.EPSILON) * Math.pow(10, decimals)) / Math.pow(10, decimals)).toFixed(decimals);
 };
@@ -318,6 +386,7 @@ export {
   downloadFile,
   emailCheck,
   exitFullscreen,
+  findLcs,
   foreachTree,
   format,
   formatToFixed,
@@ -325,6 +394,8 @@ export {
   getOSType,
   getURLParameters,
   hideMobile,
+  highlight,
+  highlight1,
   launchFullscreen,
   mobileCheck,
   moneyFormat,
