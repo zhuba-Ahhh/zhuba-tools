@@ -53,11 +53,11 @@ export const highlight = (lcs: string, subStr: string): string => {
     if (i < indexArr.length - 1) {
       const end = indexArr[i + 1];
       if (end - start > 1) {
-        diff.push(`<span style="color: #F33131" >${subStr.slice(start + 1, end)}</span>`);
+        diff.push(`<span style="color: #F33131">${subStr.slice(start + 1, end)}</span>`);
       }
     } else {
       if (start !== subStr.length - 1) {
-        diff.push(`<span style="color: #F33131" >${subStr.slice(start + 1)}</span>`);
+        diff.push(`<span style="color: #F33131">${subStr.slice(start + 1)}</span>`);
       }
     }
   }
