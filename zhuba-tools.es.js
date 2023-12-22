@@ -29,6 +29,16 @@ const noRepeat = (arr) => {
   }
   return [...new Set(arr)];
 };
+const quickSort = (arr) => {
+  if (arr.length < 2) {
+    return arr;
+  }
+  const left = [], right = [], cur = arr.splice(0, 1);
+  for (const item of arr) {
+    item > cur ? right.push(item) : left.push(item);
+  }
+  return quickSort(left).concat(cur, quickSort(right));
+};
 const turnCase = (str, type = 1) => {
   if (typeof str !== "string") {
     throw new Error("Input must be a string");
@@ -46,6 +56,49 @@ const turnCase = (str, type = 1) => {
     default:
       return str;
   }
+};
+const getBatteryStatus = async () => {
+  if (!navigator.getBattery) {
+    throw new Error("Battery status is not supported by this browser.");
+  }
+  const battery = await navigator.getBattery();
+  return {
+    charging: battery.charging,
+    chargingTime: battery.chargingTime,
+    dischargingTime: battery.dischargingTime,
+    level: battery.level
+  };
+};
+getBatteryStatus().then((status) => {
+  console.log(status);
+}).catch((error) => {
+  console.error(error);
+});
+const getCurrentPosition = () => {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("Geolocation is not supported by this browser."));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude, accuracy, altitude, altitudeAccuracy, speed, heading } = position.coords;
+        resolve({
+          timestamp: position.timestamp,
+          latitude,
+          longitude,
+          accuracy,
+          altitude,
+          altitudeAccuracy,
+          speed,
+          heading
+        });
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
 };
 var OSType = /* @__PURE__ */ ((OSType2) => {
   OSType2[OSType2["IOS"] = 1] = "IOS";
@@ -84,6 +137,15 @@ const getURLParameters = (url) => {
     },
     {}
   );
+};
+const parseUrl = (url) => {
+  const queryStart = url.indexOf("?");
+  const queryParams = new URLSearchParams(queryStart >= 0 ? url.substring(queryStart) : "");
+  const obj = {};
+  queryParams.forEach((value, key) => {
+    obj[key] = /^\d+(\.\d+)?$/.test(value) ? parseFloat(value) : decodeURIComponent(value);
+  });
+  return obj;
 };
 let scrollTop = 0;
 const preventScroll = () => {
@@ -190,6 +252,37 @@ const uuid = (len = 6, pre = "u_") => {
 };
 const typeOf = (obj) => {
   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+};
+const getTime = () => {
+  return (/* @__PURE__ */ new Date()).toLocaleString();
+};
+const timestampToTime = (timestamp = Date.now(), isMs = true, format2 = "YYYY-MM-DD HH:mm:ss") => {
+  const date = new Date(isMs ? timestamp : timestamp * 1e3);
+  const pad = (num) => num < 10 ? "0" + num : String(num);
+  return format2.replace("YYYY", String(date.getUTCFullYear())).replace("MM", pad(date.getUTCMonth() + 1)).replace("DD", pad(date.getUTCDate())).replace("HH", pad(date.getUTCHours())).replace("mm", pad(date.getUTCMinutes())).replace("ss", pad(date.getUTCSeconds()));
+};
+const argumentsSerializate = (obj) => {
+  return Object.keys(obj).map((key) => {
+    const value = obj[key];
+    const encodedValue = typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? encodeURIComponent(value.toString()) : encodeURIComponent(JSON.stringify(value));
+    return `${encodeURIComponent(key)}=${encodedValue}`;
+  }).join("&");
+};
+const convertToCamelCase = (obj) => {
+  if (obj === null || typeof obj !== "object" || Array.isArray(obj)) {
+    return obj;
+  }
+  const newObj = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const newKey = key.replace(/_(\w)/g, function(_, p1) {
+        return p1.toUpperCase();
+      });
+      const value = obj[key];
+      newObj[newKey] = typeof value === "object" && value !== null ? convertToCamelCase(value) : value;
+    }
+  }
+  return newObj;
 };
 const debounce = (callback, wait = 1e3, immediate = false) => {
   let timer = null;
@@ -298,11 +391,11 @@ const highlight = (lcs, subStr) => {
     if (i < indexArr.length - 1) {
       const end = indexArr[i + 1];
       if (end - start > 1) {
-        diff.push(`<span style="color: #F33131" >${subStr.slice(start + 1, end)}</span>`);
+        diff.push(`<span style="color: #F33131">${subStr.slice(start + 1, end)}</span>`);
       }
     } else {
       if (start !== subStr.length - 1) {
-        diff.push(`<span style="color: #F33131" >${subStr.slice(start + 1)}</span>`);
+        diff.push(`<span style="color: #F33131">${subStr.slice(start + 1)}</span>`);
       }
     }
   }
@@ -328,6 +421,22 @@ const formatToFixed = (money, decimals = 2) => {
 const format = {
   // 格式化金额展示： 12341234.246 -> $ 12,341,234.25
   formatMoney: (money, symbol = "", decimals = 2) => formatToFixed(money, decimals).replace(/\B(?=(\d{3})+\b)/g, ",").replace(/^/, `${symbol}`)
+};
+const getRandomColor = (format2 = "hex") => {
+  const randomNum = () => Math.floor(Math.random() * 256);
+  switch (format2) {
+    case "hex":
+      return `#${Array.from(
+        { length: 6 },
+        () => "0123456789ABCDEF"[Math.floor(Math.random() * 16)]
+      ).join("")}`;
+    case "rgb":
+      return `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`;
+    case "rgba":
+      return `rgba(${randomNum()}, ${randomNum()}, ${randomNum()}, ${Math.random().toFixed(1)})`;
+    default:
+      throw new Error("Unsupported color format");
+  }
 };
 const moneyFormat = (number, decimals = 2, decPoint = ".", thousandsSep = ",") => {
   const n = Number.parseFloat(number);
@@ -367,11 +476,6 @@ const throttle = (callback, wait = 1e3, immediate = false) => {
     }
   };
 };
-const timestampToTime = (timestamp = Date.now(), isMs = true, format2 = "YYYY-MM-DD HH:mm:ss") => {
-  const date = new Date(isMs ? timestamp : timestamp * 1e3);
-  const pad = (num) => num < 10 ? "0" + num : String(num);
-  return format2.replace("YYYY", String(date.getUTCFullYear())).replace("MM", pad(date.getUTCMonth() + 1)).replace("DD", pad(date.getUTCDate())).replace("HH", pad(date.getUTCHours())).replace("mm", pad(date.getUTCMinutes())).replace("ss", pad(date.getUTCSeconds()));
-};
 const mobileCheck = (value) => /^[1][3,4,5,7,8][0-9]{9}$/.test(value);
 const IDCardCheck = (value) => /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(
   value
@@ -380,8 +484,10 @@ const emailCheck = (value) => /^([A-Za-z0-9_\-\\.])+\\@([A-Za-z0-9_\-\\.])+\.([A
 export {
   IDCardCheck,
   OSType,
+  argumentsSerializate,
   bottomVisible,
   commafy,
+  convertToCamelCase,
   debounce,
   downloadFile,
   emailCheck,
@@ -391,7 +497,10 @@ export {
   format,
   formatToFixed,
   fuzzyQuery,
+  getCurrentPosition,
   getOSType,
+  getRandomColor,
+  getTime,
   getURLParameters,
   hideMobile,
   highlight,
@@ -400,7 +509,9 @@ export {
   mobileCheck,
   moneyFormat,
   noRepeat,
+  parseUrl,
   preventScroll,
+  quickSort,
   recoverScroll,
   scrollTo,
   smoothScroll,
