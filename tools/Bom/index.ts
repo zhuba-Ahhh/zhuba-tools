@@ -1,3 +1,4 @@
+export * from './copyTableDataListener';
 export * from './createScrollControl';
 export * from './getBattery';
 export * from './getCurrentPosition';
