@@ -57,6 +57,27 @@ const turnCase = (str, type = 1) => {
       return str;
   }
 };
+const copyTableDataListener = (options) => {
+  const defaultCleanupFunction = (text) => {
+    return text.replace(/\s+/g, " ");
+  };
+  const cleanupFunction = (options == null ? void 0 : options.cleanupFunction) || defaultCleanupFunction;
+  const onCopyTableData = (event) => {
+    var _a;
+    const selection = (_a = window.getSelection()) == null ? void 0 : _a.toString();
+    if (selection) {
+      const cleanedText = cleanupFunction(selection);
+      event.preventDefault();
+      navigator.clipboard.writeText(cleanedText).catch((err) => {
+        console.error("Failed to copy text: ", err);
+      });
+    }
+  };
+  document.addEventListener("copy", onCopyTableData);
+  return () => {
+    document.removeEventListener("copy", onCopyTableData);
+  };
+};
 const createScrollControl = () => {
   let scrollTop = 0;
   let originalStyle = null;
@@ -500,6 +521,7 @@ export {
   bottomVisible,
   commafy,
   convertToCamelCase,
+  copyTableDataListener,
   createScrollControl,
   debounce,
   downloadFile,
