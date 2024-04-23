@@ -8,12 +8,12 @@ type ConvertToCamelCase<T> = T extends object
     }
   : T;
 
-export const convertToCamelCase = <T extends object>(obj: T): ConvertToCamelCase<T> => {
+export const convertToCamelCase = <T extends object>(obj: T | null): ConvertToCamelCase<T> => {
   if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
     return obj as ConvertToCamelCase<T>;
   }
 
-  const newObj: Partial<ConvertToCamelCase<T>> = {};
+  const newObj: Record<string, any> = {};
 
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
