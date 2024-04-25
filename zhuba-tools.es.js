@@ -283,6 +283,44 @@ const uuid = (len = 6, pre = "u_") => {
   }
   return pre + rtn;
 };
+function uuid1(pre = "u_") {
+  return pre + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+}
+const isEqual = (a, b) => {
+  if (a === b) {
+    return true;
+  }
+  const typeA = typeof a;
+  const typeB = typeof b;
+  if (typeA !== typeB) {
+    return false;
+  }
+  if (typeA !== "object" || a === null || b === null) {
+    return a === b;
+  }
+  if (Array.isArray(a)) {
+    if (!Array.isArray(b) || a.length !== b.length) {
+      return false;
+    }
+    for (let i = 0; i < a.length; i++) {
+      if (!isEqual(a[i], b[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+  for (const key of keysA) {
+    if (!keysB.includes(key) || !isEqual(a[key], b[key])) {
+      return false;
+    }
+  }
+  return true;
+};
 const typeOf = (obj) => {
   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 };
@@ -541,6 +579,7 @@ export {
   hideMobile,
   highlight,
   highlight1,
+  isEqual,
   launchFullscreen,
   mobileCheck,
   moneyFormat,
@@ -555,5 +594,6 @@ export {
   typeOf,
   useBeforeUnload,
   useDebounce,
-  uuid
+  uuid,
+  uuid1
 };
