@@ -13,3 +13,12 @@ export const uuid = (len = 6, pre = 'u_'): string => {
   }
   return pre + rtn;
 };
+
+/**
+ *
+ * @param pre 前缀
+ * @returns uuid
+ */
+export function uuid1(pre = 'u_'): string {
+  return pre + Date.now().toString(36) + Math.floor(Math.random() * 10000).toString(36);
+}
