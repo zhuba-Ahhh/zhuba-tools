@@ -286,6 +286,34 @@ const uuid = (len = 6, pre = "u_") => {
 function uuid1(pre = "u_") {
   return pre + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
 }
+function isObject(val) {
+  return Object.prototype.toString.call(val) === "[object Object]";
+}
+const copy = (target, hash = /* @__PURE__ */ new WeakMap()) => {
+  if (!isObject(target)) {
+    throw TypeError("arguments must be Object");
+  }
+  if (hash.has(target)) {
+    return hash.get(target);
+  }
+  const ret = {};
+  for (const key of Object.keys(target)) {
+    const val = target[key];
+    if (typeof val !== "object" || val === null) {
+      ret[key] = val;
+    } else if (Array.isArray(val)) {
+      ret[key] = [...val];
+    } else if (val instanceof Set) {
+      ret[key] = /* @__PURE__ */ new Set([...val]);
+    } else if (val instanceof Map) {
+      ret[key] = new Map([...val]);
+    } else {
+      hash.set(val, val);
+      ret[key] = copy(val, hash);
+    }
+  }
+  return ret;
+};
 const isEqual = (a, b) => {
   if (a === b) {
     return true;
@@ -321,6 +349,28 @@ const isEqual = (a, b) => {
   }
   return true;
 };
+function merge(target, source) {
+  if (!isObject(target)) {
+    return source;
+  }
+  if (!isObject(source)) {
+    return target;
+  }
+  const targetObject = copy(target);
+  const sourceObject = copy(source);
+  Object.keys(sourceObject).forEach((key) => {
+    const targetValue = targetObject[key];
+    const sourceValue = sourceObject[key];
+    if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+      targetObject[key] = targetValue.concat(sourceValue);
+    } else if (isObject(targetValue) && isObject(sourceValue)) {
+      targetObject[key] = merge(targetValue, sourceValue);
+    } else {
+      targetObject[key] = sourceValue ?? targetObject[key];
+    }
+  });
+  return targetObject;
+}
 const typeOf = (obj) => {
   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 };
@@ -559,6 +609,7 @@ export {
   bottomVisible,
   commafy,
   convertToCamelCase,
+  copy,
   copyTableDataListener,
   createScrollControl,
   debounce,
@@ -580,7 +631,9 @@ export {
   highlight,
   highlight1,
   isEqual,
+  isObject,
   launchFullscreen,
+  merge,
   mobileCheck,
   moneyFormat,
   noRepeat,
