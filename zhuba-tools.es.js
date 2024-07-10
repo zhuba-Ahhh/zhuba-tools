@@ -559,6 +559,14 @@ const getRandomColor = (format2 = "hex") => {
       throw new Error("Unsupported color format");
   }
 };
+var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
+  LogLevel2["DEBUG"] = "DEBUG";
+  LogLevel2["INFO"] = "INFO";
+  LogLevel2["WARN"] = "WARN";
+  LogLevel2["ERROR"] = "ERROR";
+  LogLevel2["FATAL"] = "FATAL";
+  return LogLevel2;
+})(LogLevel || {});
 const moneyFormat = (number, decimals = 2, decPoint = ".", thousandsSep = ",") => {
   const n = Number.parseFloat(number);
   if (!Number.isFinite(n)) {
@@ -604,6 +612,7 @@ const IDCardCheck = (value) => /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11
 const emailCheck = (value) => /^([A-Za-z0-9_\-\\.])+\\@([A-Za-z0-9_\-\\.])+\.([A-Za-z]{2,4})$/.test(value);
 export {
   IDCardCheck,
+  LogLevel,
   OSType,
   argumentsSerializate,
   bottomVisible,

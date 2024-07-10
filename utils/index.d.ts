@@ -5,6 +5,7 @@ export * from './downloadFile';
 export * from './findLcsHighlight';
 export * from './format';
 export * from './getRandomHexColor';
+export * from './Logger';
 export * from './moneyFormat';
 export * from './throttle';
 export * from './validate';
