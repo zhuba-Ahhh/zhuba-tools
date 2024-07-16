@@ -613,12 +613,60 @@ const prettyLog = (config = {}) => {
     const color = customColor || (type === "info" ? infoColor : type === "error" ? errorColor : type === "warning" ? warningColor : successColor);
     logMessage(type[0].toUpperCase() + type.slice(1), text, color);
   };
+  let cachedImg = null;
+  let cachedCanvas = null;
+  const createOrUpdateElement = (element, type) => {
+    if (!element) {
+      return type === "img" ? new Image() : document.createElement("canvas");
+    }
+    return element;
+  };
+  const picture = async (url, scale = 1, x = 0, y = 0, width = 0, height = 0) => {
+    cachedImg = createOrUpdateElement(cachedImg, "img");
+    cachedCanvas = createOrUpdateElement(cachedCanvas, "canvas");
+    const img = cachedImg;
+    const canvas = cachedCanvas;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error("Failed to get canvas context");
+    }
+    img.crossOrigin = "anonymous";
+    img.src = url;
+    return new Promise((resolve, reject) => {
+      img.onload = () => {
+        const drawWidth = width || img.width;
+        const drawHeight = height || img.height;
+        canvas.width = drawWidth;
+        canvas.height = drawHeight;
+        ctx.fillStyle = "red";
+        ctx.fillRect(0, 0, drawWidth, drawHeight);
+        ctx.drawImage(img, x, y, drawWidth, drawHeight);
+        const dataUri = canvas.toDataURL("image/png");
+        console.log(
+          `%c sup?`,
+          `font-size: 1px;
+          padding: ${Math.floor(drawHeight * scale / 2)}px ${Math.floor(drawWidth * scale / 2)}px;
+          background-image: url(${dataUri});
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: ${drawWidth * scale}px ${drawHeight * scale}px;
+          color: transparent;
+          `
+        );
+        resolve();
+      };
+      img.onerror = () => {
+        reject(new Error("Failed to load image"));
+      };
+    });
+  };
   return {
     ...{
       info: (text) => log("info", text),
       error: (text) => log("error", text),
       warning: (text) => log("warning", text),
-      success: (text) => log("success", text)
+      success: (text) => log("success", text),
+      picture: (url, scale, x, y, width, height) => picture(url, scale, x, y, width, height)
     },
     log
   };

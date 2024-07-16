@@ -16,4 +16,5 @@ export declare const prettyLog: (config?: LogConfig) => {
     error: (text: string) => void;
     warning: (text: string) => void;
     success: (text: string) => void;
+    picture: (url: string, scale?: number, x?: number, y?: number, width?: number, height?: number) => Promise<void>;
 };
