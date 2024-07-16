@@ -577,6 +577,52 @@ const moneyFormat = (number, decimals = 2, decPoint = ".", thousandsSep = ",") =
   const formattedIntPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSep);
   return decimalPart ? [formattedIntPart, decimalPart].join(decPoint) : formattedIntPart;
 };
+const prettyLog = (config = {}) => {
+  const {
+    infoColor = "#909399",
+    errorColor = "#F56C6C",
+    warningColor = "#E6A23C",
+    successColor = "#67C23A",
+    fontSize = "12px",
+    fontStyle = "normal",
+    titlePadding = "1px",
+    titleBackgroundColor,
+    messageColor = "black",
+    messagePaddingLeft = "5px"
+  } = config;
+  const logStyle = (color, isTitle) => `
+    font-size: ${fontSize};
+    font-style: ${fontStyle};
+    background: ${titleBackgroundColor || color};
+    border: 1px solid ${color};
+    padding: ${titlePadding};
+    border-radius: 2px;
+    color: ${"#fff"};
+  `;
+  const prettyPrint = (title, text, color) => {
+    console.log(
+      `%c${title} %c${text}`,
+      logStyle(color),
+      `padding-left: ${messagePaddingLeft};`
+    );
+  };
+  const logMessage = (title, text, color) => {
+    prettyPrint(title, text, color);
+  };
+  const log = (type, text, customColor) => {
+    const color = customColor || (type === "info" ? infoColor : type === "error" ? errorColor : type === "warning" ? warningColor : successColor);
+    logMessage(type[0].toUpperCase() + type.slice(1), text, color);
+  };
+  return {
+    ...{
+      info: (text) => log("info", text),
+      error: (text) => log("error", text),
+      warning: (text) => log("warning", text),
+      success: (text) => log("success", text)
+    },
+    log
+  };
+};
 const throttle = (callback, wait = 1e3, immediate = false) => {
   let last = 0;
   let timer = null;
@@ -647,6 +693,7 @@ export {
   moneyFormat,
   noRepeat,
   parseUrl,
+  prettyLog,
   quickSort,
   scrollTo,
   smoothScroll,
