@@ -1,6 +1,6 @@
 {
   "name": "zhuba-tools",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "keywords": [
     "typescript"
   ],
@@ -22,14 +22,14 @@
     "dist/*"
   ],
   "scripts": {
+    "Publish": "pnpm build && npm publish",
     "build": "rm -rf dist & vite build",
     "coverage": "vitest --coverage",
     "docs:build": "vitepress build docs",
     "docs:dev": "vitepress dev docs",
     "docs:preview": "vitepress preview docs",
     "export": "cd ./script && chmod +x generate_exports.sh && ./generate_exports.sh",
-    "test": "vitest",
-    "publish": "pnpm build && npm publish"
+    "test": "vitest"
   },
   "dependencies": {
     "react": "^18.2.0"
