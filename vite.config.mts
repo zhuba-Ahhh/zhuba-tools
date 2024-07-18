@@ -1,6 +1,7 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import viteCompression from 'vite-plugin-compression';
+import { visualizer } from 'rollup-plugin-visualizer';
 import dts from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
@@ -9,6 +10,10 @@ export default defineConfig({
     dts({ exclude: ['**/*.test.ts', '**/*.spec.ts'] }),
     viteCompression({
       algorithm: 'gzip' // 或者使用 'brotliCompress' 用于更高级的压缩
+    }),
+    visualizer({
+      // 打包完成后自动打开浏览器，显示产物体积报告
+      open: false
     })
   ],
   test: {

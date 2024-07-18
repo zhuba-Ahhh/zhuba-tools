@@ -9,6 +9,8 @@ lerna-debug.log*
 pnpm-lock.yaml
 coverage
 
+stats.html
+
 node_modules
 dist
 dist-ssr
