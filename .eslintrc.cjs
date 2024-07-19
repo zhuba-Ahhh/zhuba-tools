@@ -4,7 +4,8 @@ module.exports = {
   extends: [
     require.resolve('prefer-code-style/eslint/node'),
     require.resolve('prefer-code-style/eslint/browser'),
-    require.resolve('prefer-code-style/eslint/typescript')
+    // require.resolve('prefer-code-style/eslint/typescript'),
+    require.resolve('prefer-code-style/eslint/react')
   ],
   overrides: [
     {
