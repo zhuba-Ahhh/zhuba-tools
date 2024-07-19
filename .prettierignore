@@ -1,2 +1,6 @@
-dist
 node_modules
+dist
+coverage
+.eslintcache
+pnpm-lock.yaml
+index.html

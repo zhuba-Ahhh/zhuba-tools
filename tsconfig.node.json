@@ -6,5 +6,11 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.mts", "tools/**/*.ts", "tools/**/*.d.ts", "tools/**/*.tsx", "script/export.ts"]
+  "include": [
+    "vite.config.mts",
+    "tools/**/*.ts",
+    "tools/**/*.d.ts",
+    "tools/**/*.tsx",
+    "script/export.ts"
+  ]
 }

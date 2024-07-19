@@ -29,6 +29,8 @@
     "docs:dev": "vitepress dev docs",
     "docs:preview": "vitepress preview docs",
     "export": "cd ./script && chmod +x generate_exports.sh && ./generate_exports.sh",
+    "format": "prettier --write --ignore-unknown .",
+    "lint:es": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
     "test": "vitest"
   },
   "dependencies": {
