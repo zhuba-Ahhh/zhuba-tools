@@ -78,6 +78,14 @@ const copyTableDataListener = (options) => {
     document.removeEventListener("copy", onCopyTableData);
   };
 };
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log("Text copied to clipboard");
+  } catch (err) {
+    console.error("Failed to copy: ", err);
+  }
+}
 const createScrollControl = () => {
   let scrollTop = 0;
   let originalStyle = null;
@@ -1796,6 +1804,7 @@ export {
   convertToCamelCase,
   copy,
   copyTableDataListener,
+  copyToClipboard,
   createScrollControl,
   debounce,
   downloadFile,
