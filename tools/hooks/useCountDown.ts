@@ -9,7 +9,7 @@ interface IProps {
    */
   onEnd?: () => void;
 }
-export default function useCountDown(props: IProps) {
+export function useCountDown(props: IProps) {
   const { time, onEnd = () => {} } = props;
   // 泛型
   const timeId = useRef<{ id: number }>({ id: -1 });
