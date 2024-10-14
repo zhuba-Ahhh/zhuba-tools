@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 const foreachTree = (data, callback, childrenName = "children", depth = 0, parent) => {
   for (const item of data) {
     callback(item, depth, parent);
@@ -257,6 +257,39 @@ const useBeforeUnload = (dep = []) => {
     };
   }, [dep]);
 };
+function useCountDown(props) {
+  const { time, onEnd = () => {
+  } } = props;
+  const timeId = useRef({ id: -1 });
+  const [count, setCount] = useState(0);
+  const start = () => {
+    if (typeof time !== "number")
+      return;
+    setCount(time);
+    timeId.current.id = window.setInterval(() => {
+      setCount((pre) => pre - 1);
+    }, 1e3);
+  };
+  const stop = () => {
+    var _a;
+    setCount(0);
+    clearInterval((_a = timeId.current) == null ? void 0 : _a.id);
+  };
+  useEffect(() => {
+    return () => {
+      var _a;
+      clearInterval((_a = timeId.current) == null ? void 0 : _a.id);
+    };
+  }, []);
+  useEffect(() => {
+    var _a;
+    if (count <= 0) {
+      clearInterval((_a = timeId.current) == null ? void 0 : _a.id);
+      onEnd == null ? void 0 : onEnd();
+    }
+  }, [count]);
+  return [count, start, stop];
+}
 const useDebounce = (callback, delay = 1e3, dep = []) => {
   const { current } = useRef({
     callback,
@@ -1849,6 +1882,7 @@ export {
   turnCase,
   typeOf,
   useBeforeUnload,
+  useCountDown,
   useDebounce,
   uuid,
   uuid1

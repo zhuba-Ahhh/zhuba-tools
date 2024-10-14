@@ -8,5 +8,5 @@ interface IProps {
      */
     onEnd?: () => void;
 }
-export default function useCountDown(props: IProps): readonly [number, () => void, () => void];
+export declare function useCountDown(props: IProps): readonly [number, () => void, () => void];
 export {};
