@@ -1462,6 +1462,13 @@ function merge(target, source) {
 const typeOf = (obj) => {
   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 };
+const truncateString = (str, maxLength = 12, trailing = "...") => {
+  if (str.length > maxLength) {
+    return str.substring(0, maxLength - trailing.length) + trailing;
+  } else {
+    return str;
+  }
+};
 const getTime = () => {
   return (/* @__PURE__ */ new Date()).toLocaleString();
 };
@@ -1838,6 +1845,7 @@ export {
   smoothScroll,
   throttle,
   timestampToTime,
+  truncateString,
   turnCase,
   typeOf,
   useBeforeUnload,
