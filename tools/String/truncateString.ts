@@ -6,8 +6,7 @@
  * @param {string} [trailing='...'] - The string to append if the original string is truncated.
  * @return {string} The truncated string with an ellipsis if truncated, otherwise the original string.
  */
-
-export const truncateString = (str: string, maxLength = 12, trailing: string = '...') => {
+export const truncateString = (str: string, maxLength: number = 12, trailing: string = '...'): string => {
   if (str.length > maxLength) {
     return str.substring(0, maxLength - trailing.length) + trailing;
   } else {
