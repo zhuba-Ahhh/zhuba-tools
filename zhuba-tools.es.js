@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 const foreachTree = (data, callback, childrenName = "children", depth = 0, parent) => {
   for (const item of data) {
     callback(item, depth, parent);
@@ -243,6 +249,69 @@ const smoothScroll = (element) => {
     behavior: "smooth"
   });
 };
+class TypeWriterCore {
+  // 用于控制下一次消费的定时器
+  constructor({ onConsume, maxStepSeconds }) {
+    __publicField(this, "onConsume");
+    // 消费（处理）字符的回调函数
+    __publicField(this, "queueList", []);
+    // 存储待消费字符的队列
+    __publicField(this, "maxStepSeconds", 50);
+    // 默认最大步进间隔为50毫秒
+    __publicField(this, "maxQueueNum", 2e3);
+    // 队列中最大字符数
+    __publicField(this, "timer");
+    this.onConsume = onConsume;
+    if (maxStepSeconds !== void 0) {
+      this.maxStepSeconds = maxStepSeconds;
+    }
+  }
+  // 动态计算消费字符的速度
+  dynamicSpeed() {
+    const speedQueueNum = this.maxQueueNum / this.queueList.length;
+    const resNum = +(speedQueueNum > this.maxStepSeconds ? this.maxStepSeconds : speedQueueNum).toFixed(0);
+    return resNum;
+  }
+  // 将字符串添加到队列中
+  onAddQueueList(str) {
+    this.queueList = [...this.queueList, ...str.split("")];
+  }
+  // 添加字符串到队列的公共方法
+  add(str) {
+    if (!str)
+      return;
+    this.onAddQueueList(str);
+  }
+  // 从队列中消费一个字符
+  consume() {
+    if (this.queueList.length > 0) {
+      const str = this.queueList.shift();
+      str && this.onConsume(str);
+    }
+  }
+  // 定时消费队列中的字符
+  next() {
+    this.timer = setTimeout(() => {
+      if (this.queueList.length > 0) {
+        this.consume();
+        this.next();
+      }
+    }, this.dynamicSpeed());
+  }
+  // 开始消费队列中的字符
+  start() {
+    this.next();
+  }
+  // 渲染完成后的清理工作
+  onRendered() {
+    clearTimeout(this.timer);
+  }
+  // 清空队列并停止当前的消费过程
+  onClearQueueList() {
+    this.queueList = [];
+    clearTimeout(this.timer);
+  }
+}
 const useBeforeUnload = (dep = []) => {
   useEffect(() => {
     const beforeunload = (e) => {
@@ -310,6 +379,28 @@ const useDebounce = (callback, delay = 1e3, dep = []) => {
     }, delay);
   }, dep);
 };
+const useTypeWriter = ({ text, options }) => {
+  const [typedText, setTypedText] = useState("");
+  const typingCore = useMemo(
+    () => new TypeWriterCore({
+      onConsume: (str) => setTypedText((prev) => prev + str),
+      ...options
+    }),
+    []
+  );
+  useEffect(() => {
+    if (typingCore) {
+      typingCore == null ? void 0 : typingCore.onRendered();
+      typingCore == null ? void 0 : typingCore.add(text);
+      typingCore == null ? void 0 : typingCore.start();
+    }
+    return () => {
+      var _a;
+      return typingCore && ((_a = typingCore == null ? void 0 : typingCore.onRendered) == null ? void 0 : _a.call(typingCore));
+    };
+  }, [text]);
+  return [typedText];
+};
 const commafy = (num) => {
   return num.toString().includes(".") ? num.toLocaleString() : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, "$1,");
 };
@@ -356,7 +447,7 @@ const copy = (target, hash = /* @__PURE__ */ new WeakMap()) => {
   return ret;
 };
 function getDefaultExportFromCjs(x2) {
-  return x2 && x2.__esModule && Object.prototype.hasOwnProperty.call(x2, "default") ? x2["default"] : x2;
+  return x2.__esModule && Object.prototype.hasOwnProperty.call(x2, "default") ? x2["default"] : x2;
 }
 var chineseWorkday = {
   isWorkday,
@@ -1884,6 +1975,7 @@ export {
   useBeforeUnload,
   useCountDown,
   useDebounce,
+  useTypeWriter,
   uuid,
   uuid1
 };
